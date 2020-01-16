@@ -29,6 +29,9 @@
                     <bar-chart :data="[['Work', 1322], ['Play', 1492]]"></bar-chart>
                     <scatter-chart :data="[[174.0, 80.0], [176.5, 82.3], [180.3, 73.6]]"></scatter-chart>
                     <line-chart width="200px" height="500px" :data="chartData" :download="true"></line-chart>
+                    <line-chart width="200px" height="500px" :data="chartData" :download="true"></line-chart>
+                    <line-chart width="200px" height="500px" :data="chartData" :download="true"></line-chart>
+                    <line-chart width="200px" height="500px" :data="chartData" :download="true"></line-chart>
                 </div>
             </v-flex>
         </v-layout>
