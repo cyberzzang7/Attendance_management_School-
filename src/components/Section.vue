@@ -23,15 +23,30 @@
             </v-flex>
 
             <v-flex md10="md10" class="text-center" style="background:">
-                <h1 color="primary">학생 출결 현황 그래프</h1>
+
                 <div>
-                    <column-chart width="800px" height="500px" :data="chartData" ></column-chart>
-                    <bar-chart :data="[['Work', 1322], ['Play', 1492]]"></bar-chart>
-                    <scatter-chart :data="[[174.0, 80.0], [176.5, 82.3], [180.3, 73.6]]"></scatter-chart>
-                    <line-chart width="200px" height="500px" :data="chartData" :download="true"></line-chart>
-                    <line-chart width="200px" height="500px" :data="chartData" :download="true"></line-chart>
-                    <line-chart width="200px" height="500px" :data="chartData" :download="true"></line-chart>
-                    <line-chart width="200px" height="500px" :data="chartData" :download="true"></line-chart>
+                    <div class="chartLocal1">
+                        <h2>출석 현황</h2>
+                        <column-chart width="600px" height="600px" :data="chartData"></column-chart>
+                    </div>
+                    <div class="chartLocal1">
+                        <h2>등/하교 시간</h2>
+                        <line-chart
+                            width="600px"
+                            height="600px"
+                            :data="lineData"></line-chart>
+                    </div>
+                    <div>
+                        <v-text-field
+                            label="언제부터"
+                            type="date"
+                            style="width:200px; display:inline-block"></v-text-field>
+                        ~
+                        <v-text-field
+                            label="언제까지"
+                            type="date"
+                            style="width:200px; display:inline-block"></v-text-field>
+                    </div>
                 </div>
             </v-flex>
         </v-layout>
@@ -40,49 +55,53 @@
 <script>
 
     export default {
-
         components: {},
-
         data() {
             return {
                 chartData: [
                     [
-                        'Jan', 44
+                        '출석', 44
                     ],
                     [
-                        'Feb', 27
+                        '지각', 5
                     ],
                     [
-                        'Mar', 60
+                        '조퇴', 2
                     ],
                     [
-                        'Apr', 55
+                        '결석', 0
+                    ]
+                ],
+                lineData: [
+                    [
+                        '2017-05-13', 2
                     ],
                     [
-                        'May', 37
+                        '2017-05-14', 5
                     ],
                     [
-                        'Jun', 40
+                        '2017-05-15', 20
                     ],
                     [
-                        'Jul', 69
+                        '2017-05-16', 1
                     ],
                     [
-                        'Aug', 33
+                        '2017-05-17', 8
                     ],
                     [
-                        'Sept', 76
+                        '2017-05-18', 8
                     ],
                     [
-                        'Oct', 90
+                        '2017-05-19', 8
                     ],
                     [
-                        'Nov', 34
+                        '2017-05-20', 8
                     ],
                     [
-                        'Dec', 22
+                        '2017-05-21', 8
                     ]
                 ]
+
             }
         }
     }
@@ -91,5 +110,12 @@
 <style>
     .layout-container {
         display: flex;
+    }
+    .chartLocal1 {
+        margin: 20px;
+        width: 700px;
+        height: 700px;
+        display: inline-block;
+
     }
 </style>

@@ -9,7 +9,8 @@
                 </div>
 
                 <div class="btdiv" style=" float: right;">
-                <v-btn class="btn1" x-small rounded color="primary" >로그아웃</v-btn>
+                <v-btn class="btn1" x-small rounded color="primary"
+                 @click="$store.dispatch('logout')">로그아웃</v-btn>
                 <v-btn class="btn1" x-small rounded color="primary" >정보수정</v-btn>
                 </div>
             </v-flex>
@@ -38,13 +39,18 @@
 </template>
 
 <script>
+    
+import { mapState }  from "vuex"
+
 export default {
     data(){
         return {
             title:'NFC 학생용 웹',
             name:"님 안녕하세요"
         }
-    }
+    },computed:{
+    ...mapState(["isLogin"])
+  }, 
 }
 </script>
 
