@@ -31,6 +31,7 @@ const routes = [
   {
     path: "/mypage",
     name: "mypage",
+    beforeEnter: onlyAuthUser,
     component: () => 
     import(/* webpackChunkName: "mypage" */ "../views/Mypage.vue")
   },

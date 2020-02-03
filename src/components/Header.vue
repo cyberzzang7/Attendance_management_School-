@@ -4,8 +4,8 @@
         <v-layout style="margin:2px; padding: 10px;">
             <v-flex md2.5 style="display:inline-block;">
                 <div class="txdiv">
-                <p style="margin:0px;" class="pline">김원형{{name}}</p>
-                <p style="margin:0px;">학번 : 1701058</p>
+                <p style="margin:0px;" class="pline">{{userInfo.std_name}}{{name}}</p>
+                <p style="margin:0px;">학번 : {{userInfo.std_num}}</p>
                 </div>
 
                 <div class="btdiv" style=" float: right;">
@@ -19,7 +19,7 @@
                 <h1>{{title}}</h1>
             </v-flex>
 
-            <v-flex md2.5 style="text-align:center;"> 
+            <v-flex md2.5 style="text-align:right;"> 
                 <v-btn text  class="#000000"  style="margin:5px;" >
                     <v-icon large class="material-icons" color="red">
                     notifications
@@ -49,7 +49,7 @@ export default {
             name:"님 안녕하세요"
         }
     },computed:{
-    ...mapState(["isLogin"])
+    ...mapState(["userInfo"])
   }, 
 }
 </script>

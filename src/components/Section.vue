@@ -17,8 +17,8 @@
                         <v-text-field label="날짜를 입력해주세요" type="date" placeholder="Placeholder"></v-text-field>
                     </v-col>
 
-                    <v-btn text="text" color="dark">입실:08:24</v-btn>
-                    <v-btn text="text" color="dark">퇴실:21:22</v-btn>
+                    <v-btn text="text" color="dark">입실 : {{userInfo.in_time}}</v-btn>
+                    <v-btn text="text" color="dark">퇴실 : {{userInfo.out_time}}</v-btn>
                 </v-card>
             </v-flex>
 
@@ -27,14 +27,19 @@
                 <div>
                     <div class="chartLocal1">
                         <h2>출석 현황</h2>
-                        <column-chart width="600px" height="600px" :data="chartData"></column-chart>
+                        <column-chart width="600px" height="600px" :data="[
+                        ['출석', userInfo.attend], 
+                        ['결석', userInfo.absence],
+                        ['지각', userInfo.late],
+                        ['조퇴', userInfo.early_leave]
+                        ]"></column-chart>
                     </div>
                     <div class="chartLocal1">
                         <h2>등/하교 시간</h2>
                         <line-chart
                             width="600px"
                             height="600px"
-                            :data="lineData"></line-chart>
+                           timeline :data="lineData"></line-chart>
                     </div>
                     <div>
                         <v-text-field
@@ -53,56 +58,19 @@
     </v-container>
 </template>
 <script>
+import { mapState }  from "vuex"
 
     export default {
         components: {},
         data() {
             return {
-                chartData: [
-                    [
-                        '출석', 44
-                    ],
-                    [
-                        '지각', 5
-                    ],
-                    [
-                        '조퇴', 2
-                    ],
-                    [
-                        '결석', 0
-                    ]
-                ],
                 lineData: [
-                    [
-                        '2017-05-13', 2
-                    ],
-                    [
-                        '2017-05-14', 5
-                    ],
-                    [
-                        '2017-05-15', 20
-                    ],
-                    [
-                        '2017-05-16', 1
-                    ],
-                    [
-                        '2017-05-17', 8
-                    ],
-                    [
-                        '2017-05-18', 8
-                    ],
-                    [
-                        '2017-05-19', 8
-                    ],
-                    [
-                        '2017-05-20', 8
-                    ],
-                    [
-                        '2017-05-21', 8
-                    ]
+                  
                 ]
 
             }
+        },computed:{
+    ...mapState(["userInfo"])
         }
     }
 </script>

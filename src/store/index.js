@@ -1,24 +1,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import router from '../router'
+import axios from 'axios'
+import { normalizeUnits } from 'moment'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
         userInfo: null,
-        allUsers: [
-            {
-                id: 1,
-                name: "김원형",
-                email: "cyberzzang7@naver.com",
-                password: "1234"
-            }, {
-                id: 2,
-                name: "lego",
-                email: "lego@naver.com",
-                password: "1234"
-            }
-        ],
         isLogin: false,
         isLoginError: false
     },
@@ -43,19 +33,58 @@ export default new Vuex.Store({
     }, // state값을  로직을 변화 시킴
     actions: {
         //로그인 시도 성공했을 때 뮤테이션 성공을 실행
-        login({ state,commit }, loginObj) {
-            let selectedUser = null
-
-            state.allUsers.forEach(user => {
-                    if (user.email === loginObj.email) 
-                        selectedUser = user
+        login({ commit }, loginObj) {
+            axios
+                .post('http://192.168.1.200/login_check_web.php', loginObj)
+                                                            //loginObj = {email,password}
+            .then (res => {
+            //서버에서 돌아오는 결과값
+            let a = res.data
+            let c = res.data.pfr
+            if (res.data.std === true ){
+                axios
+                .post('http://192.168.1.200/student_main.php', a)
+                .then (res => {
+                    let b = res.data
+                     console.log(c)
+                     console.log(b)
+                     console.log(res)
+                    let userInfo = { 
+                     std_name : res.data.basic_user_inf["0"].std_name,
+                     std_num : res.data.basic_user_inf["0"].std_num,
+                     in_time : res.data.today_in_out["0"].in_time,
+                     out_time : res.data.today_in_out["0"].out_time,
+                     attend : res.data.statistic_left["0"].attend,
+                     absence : res.data.statistic_left["0"].absence,
+                     late : res.data.statistic_left["0"].late,
+                     early_leave : res.data.statistic_left["0"].early_leave,
+                    }
+                   
+                    commit('loginSuccess', userInfo)
+                    router.push({name : "mypage"})
+                  
                 })
-            if (selectedUser === null || selectedUser.password !== loginObj.password) 
+            }else if (res.data.pfr === true){
                 commit("loginError")
-            else {
-                commit("loginSuccess", selectedUser)
-                router.push({name: "mypage"})
+            }else {
+                alert("이메일과 비밀번호를 확인하세요.")
+                console.log(err)
             }
+            console.log(a)
+            }).catch(err => {
+            })
+            // let selectedUser = null
+
+            // state.allUsers.forEach(user => { 
+            //         if (user.email === loginObj.email) 
+            //             selectedUser = user
+            //     })
+            // if (selectedUser === null || selectedUser.password !== loginObj.password) 
+            //     commit("loginError")
+            // else {
+            //     commit("loginSuccess", selectedUser)
+            //     router.push({name: "mypage"})
+            // }
         },
         logout({commit}){
             commit("logout")
