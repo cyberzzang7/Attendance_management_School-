@@ -53,21 +53,7 @@
         },
         methods: {
             ...mapActions(["login"]),
-           // postTest(email,password) {
-           //    axios
-           //       .post('http://192.168.1.200/login_check_web.php', {
-           //             email:this.email,
-           //             password:this.password
-           //         
-           //         })
-           //         .then(res => {
-           //             //서버에서 돌아오는 결과값
-           //             console.log(res);
-           //         })
-           //         .catch(err => {
-           //             console.log(err);
-           //         });
-          //  }
+      
         }
     }
     //그 유저의 비밀번호와 입력된 비밀번호를 비교한다. 둘다 true 가 되면 로그인 된다.

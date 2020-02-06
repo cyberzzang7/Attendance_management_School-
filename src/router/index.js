@@ -38,10 +38,24 @@ const routes = [
   {
     path: "/login",
     name: "login",
-    beforeEnter: rejectAuthUser,
+    
     component: () =>
     import(/* webpackChunkName: "login" */ "../views/Login.vue")
   },
+  {
+    path: "/infochange",
+    name: "infochange",
+    beforeEnter: onlyAuthUser,
+    component: () => 
+    import(/* webpackChunkName: "infochange" */ "../views/InfoChange.vue")
+  },
+  {
+    path: "/professorpage",
+    name: "professorpage",
+    beforeEnter: onlyAuthUser,
+    component: () => 
+    import(/* webpackChunkName: "professorpage" */ "../views/ProfessorPage.vue")
+  }
 ]
 
 const router = new VueRouter({

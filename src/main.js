@@ -6,7 +6,7 @@ import vuetify from './plugins/vuetify';
 import '@babel/polyfill'
 import Chartkick from 'vue-chartkick'
 import Chart from 'chart.js'
-
+import ProfessorPage from './views/ProfessorPage.vue'
 
 Vue.use(Chartkick.use(Chart))
 

@@ -11,7 +11,8 @@
                 <div class="btdiv" style=" float: right;">
                 <v-btn class="btn1" x-small rounded color="primary"
                  @click="$store.dispatch('logout')">로그아웃</v-btn>
-                <v-btn class="btn1" x-small rounded color="primary" >정보수정</v-btn>
+                <v-btn class="btn1" x-small rounded color="primary"
+                 router :to="{name: 'infochange'}" >정보수정</v-btn>
                 </div>
             </v-flex>
             
@@ -39,7 +40,6 @@
 </template>
 
 <script>
-    
 import { mapState }  from "vuex"
 
 export default {

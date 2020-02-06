@@ -8,6 +8,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        setInfo:null,
         userInfo: null,
         isLogin: false,
         isLoginError: false
@@ -33,9 +34,10 @@ export default new Vuex.Store({
     }, // state값을  로직을 변화 시킴
     actions: {
         //로그인 시도 성공했을 때 뮤테이션 성공을 실행
+
         login({ commit }, loginObj) {
             axios
-                .post('http://192.168.1.200/login_check_web.php', loginObj)
+                .post('http://192.168.0.6/login_check_web.php', loginObj)
                                                             //loginObj = {email,password}
             .then (res => {
             //서버에서 돌아오는 결과값
@@ -43,7 +45,7 @@ export default new Vuex.Store({
             let c = res.data.pfr
             if (res.data.std === true ){
                 axios
-                .post('http://192.168.1.200/student_main.php', a)
+                .post('http://192.168.0.6/student_main.php', a)
                 .then (res => {
                     let b = res.data
                      console.log(c)
@@ -52,21 +54,32 @@ export default new Vuex.Store({
                     let userInfo = { 
                      std_name : res.data.basic_user_inf["0"].std_name,
                      std_num : res.data.basic_user_inf["0"].std_num,
-                     in_time : res.data.today_in_out["0"].in_time,
-                     out_time : res.data.today_in_out["0"].out_time,
+                  //   in_time : res.data.today_in_out["0"].in_time,
+                  //   out_time : res.data.today_in_out["0"].out_time,
                      attend : res.data.statistic_left["0"].attend,
                      absence : res.data.statistic_left["0"].absence,
                      late : res.data.statistic_left["0"].late,
                      early_leave : res.data.statistic_left["0"].early_leave,
                     }
+                    let setInfo = res.data.basic_user_inf["0"].std_num
                    
-                    commit('loginSuccess', userInfo)
+                    commit('loginSuccess', userInfo,setInfo)
                     router.push({name : "mypage"})
+                    
                   
                 })
             }else if (res.data.pfr === true){
-                commit("loginError")
+                axios.post('http://192.168.0.6/web/professor_main.php',loginObj)
+                .then (res=>{
+                    console.log(res)
+                    let userInfo={
+                        student_name:res.data
+                    }
+                    commit('loginSuccess',userInfo)
+                    router.push({name : "professorpage"})
+                })
             }else {
+                commit("loginError")
                 alert("이메일과 비밀번호를 확인하세요.")
                 console.log(err)
             }
@@ -89,6 +102,13 @@ export default new Vuex.Store({
         logout({commit}){
             commit("logout")
             router.push({name: "home"})
-        }
+        },
+        change({commit},changeObj){
+            axios
+            .post('http://192.168.0.6/student_main_modify.php',changeObj)
+            .then(res => {
+                console.log(res)
+            })
+        },
     }
 })
