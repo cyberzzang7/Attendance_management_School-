@@ -12,6 +12,8 @@ Vue.use(Chartkick.use(Chart))
 
 Vue.config.productionTip = false
 
+// export const eventBus = new Vue()
+
 new Vue({
   router,
   store,

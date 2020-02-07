@@ -13,12 +13,14 @@
                         </v-toolbar>
 
                         <div class="pa-3">
+                           
                             <v-text-field v-model="name" label="수정할 이름을 입력하세요"></v-text-field>
-                            <v-text-field v-model="id" label="수정할 학번을 입력하세요"></v-text-field>
+                             <v-text-field v-model="id" label="현재 학번 이름을 입력하세요"></v-text-field>
+                            <v-text-field v-model="changeid" label="수정할 학번을 입력하세요"></v-text-field>
                             <v-text-field v-model="password" type="password" label="수정할 패스워드를 입력하세요"></v-text-field>
                             <div>
                                 <v-btn color="primary" depressed="depressed" large="large" block="block"
-                                 @click="change({id:id,password:password,name:name})">
+                                 @click="change({name:name,id:id,changeid:changeid,password:password})">
                                  수정완료   
 
                                 </v-btn>

@@ -37,7 +37,7 @@ export default new Vuex.Store({
 
         login({ commit }, loginObj) {
             axios
-                .post('http://192.168.0.6/login_check_web.php', loginObj)
+                .post('http://192.168.0.6/web/login_check_web.php', loginObj)
                                                             //loginObj = {email,password}
             .then (res => {
             //서버에서 돌아오는 결과값
@@ -45,7 +45,7 @@ export default new Vuex.Store({
             let c = res.data.pfr
             if (res.data.std === true ){
                 axios
-                .post('http://192.168.0.6/student_main.php', a)
+                .post('http://192.168.0.6/web/student/student_main.php', a)
                 .then (res => {
                     let b = res.data
                      console.log(c)
@@ -69,12 +69,16 @@ export default new Vuex.Store({
                   
                 })
             }else if (res.data.pfr === true){
-                axios.post('http://192.168.0.6/web/professor_main.php',loginObj)
+                axios.post('http://192.168.0.6/web/professor/professor_main.php',loginObj)
                 .then (res=>{
                     console.log(res)
-                    let userInfo={
-                        student_name:res.data
+                    for (i = 1; i< 100 ; i ++ ){
+                        let userInfo={
+                            student_name  :res.data["0"]["i"][""]
+                    
+                        }
                     }
+                    console.log(userInfo.student_name)
                     commit('loginSuccess',userInfo)
                     router.push({name : "professorpage"})
                 })
@@ -105,7 +109,7 @@ export default new Vuex.Store({
         },
         change({commit},changeObj){
             axios
-            .post('http://192.168.0.6/student_main_modify.php',changeObj)
+            .post('http://192.168.0.6/web/student/student_main_modify.php',changeObj)
             .then(res => {
                 console.log(res)
             })
