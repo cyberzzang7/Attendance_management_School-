@@ -1,31 +1,124 @@
 <template>
     <v-container fluid style="padding: 0px;">
         <v-layout>
-           <!-- <h1>{{title}}</h1> -->
-         <canvas id="line-chart"  style="border:1px solid #000000;" ></canvas>
+         <v-flex style="margin-left:3px">
+            <fusioncharts
+            :type="type"
+            :width="width"
+            :height="height"
+            :dataformat="dataFormat"
+            :dataSource="dataSource"
+            >
+            </fusioncharts>
+            </v-flex>
         </v-layout>
     </v-container>
 </template>
 
 
 <script>
+// Include Dependencies
+import Vue from 'vue';
+import VueFusionCharts from 'vue-fusioncharts';
+import FusionCharts from 'fusioncharts';
+import Column2D from 'fusioncharts/fusioncharts.charts';
+import FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
+import GammelTheme from 'fusioncharts/themes/fusioncharts.theme.gammel';
 
-// var myChart = 'line-chart';{
-// var myLineChart = new Chart(myChart,{
-//     type:'bar',
-//     data:{
-//         label: ['1월','2월','3월','4월','5월','6월','7월',
-//         '8월',
-//         '9월',
-//         '10월'],
+Vue.use(VueFusionCharts, FusionCharts, Column2D, FusionTheme,GammelTheme);
+// Preparing the chart data
+
+const dataSource = {
+  chart: {
+    xaxisname: "이름",
+    yaxisname: "횟수",
+    numbersuffix: "번",
+    theme: "gammel",
+    plottooltext:
+    "<b>$dataValue</b> <b>$seriesname</b> in $label",
+    drawcrossline: "1"
+  },
+    categories: [
+       {
+       category: [
+                    {"label":"김원형"},{label: "이승형"},
+                    {
+                    label: "손형탁"
+                    },
+                    {
+                    label: "박시연"
+                    }
+                ]
+       }
+  ],
+  dataset: [
+                    {
+                    seriesname: "출석",
+                    data: [
+                        {
+                        value: "30"
+                        },
+                        {
+                        value: "20"
+                        },
+                        {
+                        value: "10"
+                        },
+                        {
+                        value: "5"
+                        }
+                    ]
+                    },
+                    {
+                    seriesname: "지각",
+                            data: [
+                                {
+                                value: "5"
+                                },
+                                {
+                                value: "10"
+                                },
+                                {
+                                value: "15"
+                                },
+                                {
+                                value: "20"
+                                }
+                            ]
+                    },
+                    {
+                    seriesname: "결석",
+                    data: [
+                        {
+                        value: "1"
+                        },
+                        {
+                        value: "2"
+                        },
+                        {
+                        value: "3"
+                        },
+                        {
+                        value: "4"
+                        }
+                    ]
+                    }
+            ] // dataset
+  };
+
+export default {
+  name: 'app',
+  data() {
+    return {
+
+      "type": "mscolumn2d",
+      "renderAt": "chart-container",
+      "width":"100%",
+      "height":"820",
+      "dataFormat": "json",
+      dataSource
         
-
-//         datasets:[
-//             {
-//                 label:'2020',
-//                 data:[10,8,6,5,1,12,7,16,7,6,10]
-//             }] 
-//     }
-// });
-
+    }
+  }
+}
 </script>

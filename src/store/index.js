@@ -42,15 +42,13 @@ export default new Vuex.Store({
             .then (res => {
             //서버에서 돌아오는 결과값
             let a = res.data
-            let c = res.data.pfr
+            console.log(a)
             if (res.data.std === true ){
                 axios
                 .post('http://192.168.0.6/web/student/student_main.php', a)
                 .then (res => {
                     let b = res.data
-                     console.log(c)
-                     console.log(b)
-                     console.log(res)
+                    console.log(b)
                     let userInfo = { 
                      std_name : res.data.basic_user_inf["0"].std_name,
                      std_num : res.data.basic_user_inf["0"].std_num,
@@ -72,14 +70,7 @@ export default new Vuex.Store({
                 axios.post('http://192.168.0.6/web/professor/professor_main.php',loginObj)
                 .then (res=>{
                     console.log(res)
-                    for (i = 1; i< 100 ; i ++ ){
-                        let userInfo={
-                            student_name  :res.data["0"]["i"][""]
-                    
-                        }
-                    }
-                    console.log(userInfo.student_name)
-                    commit('loginSuccess',userInfo)
+                    commit('loginSuccess')
                     router.push({name : "professorpage"})
                 })
             }else {
@@ -87,7 +78,7 @@ export default new Vuex.Store({
                 alert("이메일과 비밀번호를 확인하세요.")
                 console.log(err)
             }
-            console.log(a)
+          
             }).catch(err => {
             })
             // let selectedUser = null
@@ -108,11 +99,27 @@ export default new Vuex.Store({
             router.push({name: "home"})
         },
         change({commit},changeObj){
+            console.log(changeObj)
+            if(changeObj.name==null||changeObj.name==""){
+                alert("이름을 확인하세요.")
+                console.log(1)
+            }else if (changeObj.id==null||changeObj.id==""){
+                alert("현재 학번을 확인 하세요.")
+                console.log(2)
+            }else if (changeObj.changeid==null||changeObj.changeid==""){
+                alert("수정할 학번을 확인 하세요.")
+                console.log(3)
+            }else if (changeObj.password==null||changeObj.password==""){
+                alert("수정할 패스워드를 입력하세요.")
+                console.log(4)
+            }else{
             axios
             .post('http://192.168.0.6/web/student/student_main_modify.php',changeObj)
             .then(res => {
                 console.log(res)
+                
             })
+         }
         },
     }
 })

@@ -9,19 +9,21 @@
                         outlined="outlined"
                         color="black"
                         large="large"
-                        text="text">월별 출석부</v-btn>
+                        text="text"
+                        @click="toggleOnOff" >월별 출석부</v-btn>
                     <v-btn
                         class="btn_color"
                         outlined="outlined"
                         color="black"
                         large="large"
-                        text="text">출석 통계</v-btn>
-
+                        text="text"
+                        @click="statistic()"
+                        >출석 통계</v-btn>
                 </v-card>
             </v-flex>
 
             <v-flex md11="md11" class="text-center" style="background:">
-                <v-simple-table class="table_color">
+                <v-simple-table class="table_color" v-if="isStatusOn">
                     <thead >
                         <tr>
                             <td
@@ -41,40 +43,46 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="student_names in userInfo.student_name" :key="student_names">
+                        <tr v-for="student_names in student_name" :key="student_names">
                             <td class="table_thead_td">
-                            {{ student_names }}
+                                {{student_names}}
                             </td>
                             <td
-                                v-for="student_checks in student_check"
-                                :key="student_checks"
+                                v-for="student_checks in student_check" :key="student_checks"
                                 class="table_thead_td">
                                 {{student_checks}}
                             </td>
                         </tr>
-
                     </tbody>
-  
                 </v-simple-table>
+
+                <h1 v-if="isStatus2"> 출석 통계
+                <Char v-if="isStatus2"></Char>
+                </h1>
             </v-flex>
         </v-layout>
     </v-container>
 </template>
 <script>
-    import proheadercom from './proHeader.vue'
-    import {mapState} from "vuex"
+import Char from './Char.vue'
+import proheadercom from './proHeader.vue'
+import {mapState} from "vuex"
+import axios from 'axios'
+
 
     export default {
         components: {
-            proheadercom
+            proheadercom,Char
+          
         },
         props:['currentYear','currentMonth','student_check','dayss'],
         data() {
             return {
-                
+                student_name:['김광일','권소현','김민혁'],
                 info:[],
-           
-
+                isStatusOn:true,
+                isStatus2:false,
+          
             }
         },
         created(){
@@ -87,7 +95,25 @@
        
         },
         methods: {
-            
+            statistic(){
+                this.isStatus2 = true;
+                this.isStatusOn = false;
+                axios
+                .post('http://192.168.0.6/web/professor/professor_statistic.php')
+                .then(res => {
+                    console.log(res.data)
+                    
+                })
+            },
+            toggleOnOff: function() {
+                 this.isStatusOn = true;
+                 this.isStatus2 = false;
+            },
+           // page2: function() {
+           //     this.isStatus2 = true;
+           //     this.isStatusOn = false;
+           // },
+          
         },
         computed: {
             ...mapState(["userInfo"])
@@ -117,3 +143,4 @@
         height: 45px;
     }
 </style>
+

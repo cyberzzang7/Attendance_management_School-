@@ -20,7 +20,7 @@
                    </h1>
                 </v-flex>
 
-                <v-flex md1="md1" style="text-align:right;padding-top:8px;">
+                <v-flex md1="md1" style="text-align:right;padding-top:10px;">
                     <v-btn text="text" class="#000000" style="margin:5px;">
                         <v-icon large="large" class="material-icons" color="red">
                             notifications
@@ -28,7 +28,7 @@
 
                     </v-btn>
                 </v-flex>
-                <v-flex md1="md1" style="text-align:right;padding-top:8px;">
+                <v-flex md1="md1" style="text-align:right;padding-top:10px;">
                     <v-btn text="text" class="#000000" style="margin:5px;">
                         <v-icon large="large" class="material-icons" color="red">
                             notifications
@@ -83,7 +83,7 @@
                 this.student_check = [];
                 // this.student_check.push(this.student_name[this.num]); this.num++
                 for (var i = 1;i <= (new Date(this.currentYear, this.currentMonth, 0).getDate());i++) {
-                    this.student_check.push()
+                    this.student_check.push(null)
                 }
             
             },

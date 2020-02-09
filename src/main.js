@@ -6,11 +6,12 @@ import vuetify from './plugins/vuetify';
 import '@babel/polyfill'
 import Chartkick from 'vue-chartkick'
 import Chart from 'chart.js'
-import ProfessorPage from './views/ProfessorPage.vue'
+import Char from './components/Char.vue'
+import professorpage from './views/ProfessorPage.vue'
 
 Vue.use(Chartkick.use(Chart))
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 // export const eventBus = new Vue()
 
@@ -18,5 +19,5 @@ new Vue({
   router,
   store,
   vuetify,
-  render: h => h(App)
+  render: h => h(professorpage)
 }).$mount('#app')

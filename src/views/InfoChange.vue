@@ -15,7 +15,7 @@
                         <div class="pa-3">
                            
                             <v-text-field v-model="name" label="수정할 이름을 입력하세요"></v-text-field>
-                             <v-text-field v-model="id" label="현재 학번 이름을 입력하세요"></v-text-field>
+                            <v-text-field v-model="id" label="현재 학번을 입력하세요"></v-text-field>
                             <v-text-field v-model="changeid" label="수정할 학번을 입력하세요"></v-text-field>
                             <v-text-field v-model="password" type="password" label="수정할 패스워드를 입력하세요"></v-text-field>
                             <div>
@@ -42,7 +42,8 @@ export default {
             return {
             name: null,
             id: null,
-            password: null
+            password: null,
+            changeid:null
             }
         },
         methods: {
