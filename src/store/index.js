@@ -52,17 +52,18 @@ export default new Vuex.Store({
                     let userInfo = { 
                      std_name : res.data.basic_user_inf["0"].std_name,
                      std_num : res.data.basic_user_inf["0"].std_num,
-                  //   in_time : res.data.today_in_out["0"].in_time,
-                  //   out_time : res.data.today_in_out["0"].out_time,
+                //   in_time : res.data.today_in_out["0"].in_time,
+                //   out_time : res.data.today_in_out["0"].out_time,
                      attend : res.data.statistic_left["0"].attend,
                      absence : res.data.statistic_left["0"].absence,
                      late : res.data.statistic_left["0"].late,
-                     early_leave : res.data.statistic_left["0"].early_leave,
+                    early_leave : res.data.statistic_left["0"].early_leave,
                     }
                     let setInfo = res.data.basic_user_inf["0"].std_num
-                   
+                    
                     commit('loginSuccess', userInfo,setInfo)
                     router.push({name : "mypage"})
+                    
                     
                   
                 })
@@ -99,6 +100,8 @@ export default new Vuex.Store({
             router.push({name: "home"})
         },
         change({commit},changeObj){
+          
+        
             console.log(changeObj)
             if(changeObj.name==null||changeObj.name==""){
                 alert("이름을 확인하세요.")
@@ -106,18 +109,21 @@ export default new Vuex.Store({
             }else if (changeObj.id==null||changeObj.id==""){
                 alert("현재 학번을 확인 하세요.")
                 console.log(2)
-            }else if (changeObj.changeid==null||changeObj.changeid==""){
-                alert("수정할 학번을 확인 하세요.")
-                console.log(3)
             }else if (changeObj.password==null||changeObj.password==""){
                 alert("수정할 패스워드를 입력하세요.")
-                console.log(4)
+                console.log(3)
             }else{
             axios
             .post('http://192.168.0.6/web/student/student_main_modify.php',changeObj)
             .then(res => {
                 console.log(res)
-                
+                if(res.data["0"]==false){
+                    alert("이름또는 학번을 정확하게 입력하세요.")
+                }else if(res.data["0"]==true){
+                    alert("정상적으로 변경 되었습니다.")               
+                }
+                    commit("logout")
+                    router.push({name: "home"})
             })
          }
         },

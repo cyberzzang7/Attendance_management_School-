@@ -33,10 +33,8 @@
                         <v-icon large="large" class="material-icons" color="red">
                             notifications
                         </v-icon>
-
                     </v-btn>
                 </v-flex>
-
             </v-layout>
         </v-card>
         <proSectionCom 
