@@ -52,8 +52,8 @@ export default new Vuex.Store({
                     let userInfo = { 
                      std_name : res.data.basic_user_inf["0"].std_name,
                      std_num : res.data.basic_user_inf["0"].std_num,
-                //   in_time : res.data.today_in_out["0"].in_time,
-                //   out_time : res.data.today_in_out["0"].out_time,
+                   in_time : res.data.today_in_out["0"].in_time,
+                   out_time : res.data.today_in_out["0"].out_time,
                      attend : res.data.statistic_left["0"].attend,
                      absence : res.data.statistic_left["0"].absence,
                      late : res.data.statistic_left["0"].late,

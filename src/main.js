@@ -8,6 +8,7 @@ import Chartkick from 'vue-chartkick'
 import Chart from 'chart.js'
 import Char from './components/Char.vue'
 import professorpage from './views/ProfessorPage.vue'
+import date from './components/Date.vue'
 
 Vue.use(Chartkick.use(Chart))
 

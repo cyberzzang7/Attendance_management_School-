@@ -1,7 +1,7 @@
 <template>
     <v-container fluid style="padding: 0px;">
         <v-layout>
-         <v-flex style="margin-left:3px">
+           <v-flex style="margin-left:3px">
             <fusioncharts
             :type="type"
             :width="width"
@@ -10,6 +10,7 @@
             :dataSource="dataSource"
             >
             </fusioncharts>
+         
             </v-flex>
         </v-layout>
     </v-container>
@@ -38,76 +39,17 @@ const dataSource = {
     "<b>$dataValue</b> <b>$seriesname</b> in $label",
     drawcrossline: "1"
   },
-    categories: [
-       {
-       category: [
-                    {"label":"김원형"},{label: "이승형"},
-                    {
-                    label: "손형탁"
-                    },
-                    {
-                    label: "박시연"
-                    }
-                ]
-       }
-  ],
-  dataset: [
-                    {
-                    seriesname: "출석",
-                    data: [
-                        {
-                        value: "30"
-                        },
-                        {
-                        value: "20"
-                        },
-                        {
-                        value: "10"
-                        },
-                        {
-                        value: "5"
-                        }
-                    ]
-                    },
-                    {
-                    seriesname: "지각",
-                            data: [
-                                {
-                                value: "5"
-                                },
-                                {
-                                value: "10"
-                                },
-                                {
-                                value: "15"
-                                },
-                                {
-                                value: "20"
-                                }
-                            ]
-                    },
-                    {
-                    seriesname: "결석",
-                    data: [
-                        {
-                        value: "1"
-                        },
-                        {
-                        value: "2"
-                        },
-                        {
-                        value: "3"
-                        },
-                        {
-                        value: "4"
-                        }
-                    ]
-                    }
-            ] // dataset
-  };
+
+categories: [{category: ["김원형","이승형","손형탁","박시연"]}],
+
+dataset: [{seriesname: "출석", data: [{value: "30"},{value: "20"},{value: "10"},{value: "5"}]},
+          {seriesname: "지각", data: [{value: "5"},{value: "10"},{value: "15"},{value: "20"}]},
+          {seriesname: "결석", data: [{value: "1"},{value: "2"},{value: "3"},{value: "4"}]}] // dataset
+};
 
 export default {
   name: 'app',
+  props:['categories'],
   data() {
     return {
 
@@ -118,7 +60,10 @@ export default {
       "dataFormat": "json",
       dataSource
         
-    }
-  }
+        }
+    },
+    methods: {
+        
+    },
 }
 </script>
