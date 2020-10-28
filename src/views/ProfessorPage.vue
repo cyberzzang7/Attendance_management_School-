@@ -2,7 +2,7 @@
   <div id="app">
     <v-app>
      <proHeaderCom></proHeaderCom>
-    
+  
      <FooterCom></FooterCom>
     </v-app>
   </div>

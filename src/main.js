@@ -9,9 +9,11 @@ import Chart from 'chart.js'
 import Char from './components/Char.vue'
 import professorpage from './views/ProfessorPage.vue'
 import date from './components/Date.vue'
-
+import moment from "moment"
+import VueMomentJS from "vue-momentjs"
+Vue.use(VueMomentJS,moment)
 Vue.use(Chartkick.use(Chart))
-
+ 
 Vue.config.productionTip = false;
 
 // export const eventBus = new Vue()

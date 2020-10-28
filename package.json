@@ -20,9 +20,12 @@
     "vue-chartkick": "^0.6.0",
     "vue-date-pick": "^1.2.1",
     "vue-fusioncharts": "^3.0.4",
+    "vue-momentjs": "^0.1.2",
     "vue-router": "^3.1.3",
+    "vue2-timepicker": "^1.1.2",
     "vuetify": "^2.1.0",
-    "vuex": "^3.1.2"
+    "vuex": "^3.1.2",
+    "xlsx": "^0.16.7"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.0",

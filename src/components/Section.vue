@@ -13,46 +13,34 @@
                     text="text" color="primary" @click="menu = false">Cancel</v-btn> <v-btn
                     text="text" color="primary" @click="$refs.menu.save(date)">OK</v-btn>
                     </v-date-picker> </v-menu> -->
-                    <v-col >
-                        <v-text-field label="날짜를 입력해주세요" type="date" placeholder="Placeholder"></v-text-field>
-                    </v-col>
+              
 
-                    <v-btn text="text" color="dark">입실 : {{userInfo.in_time}}</v-btn>
-                    <v-btn text="text" color="dark">퇴실 : {{userInfo.out_time}}</v-btn>
+                    <v-btn x-large="" text="text" color="dark">입실 : {{userInfo.in_time}} 11:11</v-btn>
+                    <v-btn x-large="" text="text" color="dark">퇴실 : {{userInfo.out_time}}22:22</v-btn>
                 </v-card>
             </v-flex>
 
             <v-flex md10="md10" class="text-center" style="background:">
+                <template>
+                     <v-data-table
+                       :headers="headers"
+                       :items="desserts"
+                       :items-per-page="5"
+                       hide-default-footer
+                       class="elevation-1"
+                     ></v-data-table>
+                </template>
+               
 
-                <div>
-                    <div class="chartLocal1">
-                        <h2>출석 현황</h2>
-                        <column-chart width="600px" height="600px" :data="[
-                        ['출석', userInfo.attend], 
-                        ['결석', userInfo.absence],
-                        ['지각', userInfo.late],
-                        ['조퇴', userInfo.early_leave]
-                        ]"></column-chart>
-                    </div>
-                    <div class="chartLocal1">
-                        <h2>등/하교 시간</h2>
-                        <line-chart
-                            width="600px"
-                            height="600px"
-                           timeline :data="lineData"></line-chart>
-                    </div>
-                    <div>
-                        <v-text-field
-                            label="언제부터"
-                            type="date"
-                            style="width:200px; display:inline-block"></v-text-field>
-                        ~
-                        <v-text-field
-                            label="언제까지"
-                            type="date"
-                            style="width:200px; display:inline-block"></v-text-field>
-                    </div>
-                </div>
+               <template>
+                 <v-time-picker
+                    v-model="picker"
+                    :landscape="$vuetify.breakpoint.smAndUp"
+                    ampm-in-title
+                    
+                    style="margin-top:200px;"
+                ></v-time-picker>
+                </template>
             </v-flex>
         </v-layout>
     </v-container>
@@ -64,10 +52,16 @@ import { mapState }  from "vuex"
         components: {},
         data() {
             return {
-                lineData: [
-                  
-                ]
+                headers: [
+                    { text: '출석(총)', value: 'attendance',align:'center'},
+                    { text: '지각', value: 'late',align:'center' },
+                    { text: '결석', value: 'absend',align:'center' },
+                ],
 
+                desserts: [
+                    {attendance: 159,late: 6.0,absend: 24,},
+                ],
+                picker: new Date(),
             }
         },computed:{
     ...mapState(["userInfo"])

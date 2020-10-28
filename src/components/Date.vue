@@ -2,14 +2,37 @@
     <v-container fluid="fluid" style="padding: 0px;">
         <v-layout>
             <v-flex>
-                <v-card  style="margin:0px;">
-                    <v-card-title style="height:81px;">
-                      <v-toolbar-title>출석 통계</v-toolbar-title>
-                        <v-divider
-                        class="mx-4"
-                        inset
-                        vertical
-                         ></v-divider>
+                <v-card  style="margin-left:1px;">
+                    <v-card-title style="height:80px;">
+                                  
+        <v-menu
+        ref="menu"
+        v-model="menu"
+        :close-on-content-click="false"
+        transition="scale-transition"
+        offset-y
+        min-width="290px">
+        <v-date-picker day-format v-model="dates" range>  
+          <v-spacer></v-spacer>
+          <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+          <v-btn text color="primary" @click="$refs.menu.save(dates),update(dates)">OK</v-btn>
+        </v-date-picker>
+
+        <template v-slot:activator="{ on }" >
+        <v-text-field 
+          style="width:0px;"
+          v-model="dateRangeText" 
+          label="Data Search" 
+          prepend-icon="event" 
+          readonly
+          v-on="on"
+         >
+        </v-text-field>
+        </template>
+        </v-menu>
+        
+                      <v-toolbar-title style="margin:10px">출석 통계</v-toolbar-title>
+                  
                         <v-text-field
                             outlined
                             v-model="search"
@@ -17,144 +40,94 @@
                             label="Search"
                             single-line="single-line"
                             hide-details="hide-details"
-                           >
-                            </v-text-field>
+                        >
+                        </v-text-field>
+                            
+                    <v-btn 
+                        x-large=""
+                        color="#00E676"
+                        dark 
+                        @click="onemonth()"
+                        style="margin-left:10px;"
+                    ><strong>1개월</strong></v-btn>
+                    
+                    <v-btn 
+                        x-large=""
+                        color="#00E676"
+                        dark  
+                        @click="twomonth()"
+                        style="margin-left:5px;"
+                    ><strong>2개월</strong></v-btn>
+                    
+                    <v-btn 
+                        x-large=""
+                        color="#00E676"
+                        dark   
+                       @click="threemonth()"
+                        style="margin-left:5px;"
+                    ><strong>3개월</strong></v-btn>
+                     <v-btn 
+                        x-large=""
+                        color="#00E676"
+                        dark   
+                        style="margin-left:5px;"
+                    ><strong>1년</strong></v-btn>
                          </v-card-title>
-                    <v-data-table 
-                    calculate-widths='true'
-                    :items="desserts" 
+                    <v-data-table
+                     
+                     height=900
+                    :items="dessertesx.desserts" 
                     :headers="headers" 
                     :search="search"
-                    :items-per-page="15"
-                    hide-default-footer
+                    :items-per-page="50"
+                    hide-default-footer=""
+                    fixed-header
                     >
-                    
                     <template v-slot:item.late="{ item }">
                          <v-chip :color="getColor(item.late)" >{{ item.late }}</v-chip>
                     </template>
                    <template v-slot:item.name="{ item }">
                         <strong >{{ item.name }}</strong>
                     </template>
-                      
                     </v-data-table>
                 </v-card>
-            
+                {{ arr }}
             </v-flex>
-               <v-flex>
-                <v-card  style="margin:0x;">
-                    <v-card-title >
-                     
-                
-                         </v-card-title>
-                    <v-data-table 
-                    calculate-widths='true'
-                    :items="dessertsx" 
-                    :headers="headers" 
-                    :search="search"
-                    :items-per-page="16"
-                         hide-default-footer
-                    >
-                    
-                    <template v-slot:item.late="{ item }">
-                         <v-chip :color="getColor(item.late)" >{{ item.late }}</v-chip>
-                    </template>
-                 <template v-slot:item.name="{ item }">
-                        <strong >{{ item.name }}</strong>
-                    </template>
-                    </v-data-table>
-                </v-card>
-            
-            </v-flex>
-             <v-flex>
-                <v-card  style="margin:0px;">
-                    <v-card-title >
-                     
-                
-                         </v-card-title>
-                    <v-data-table 
-                    calculate-widths='true'
-                    :items="dessertsy" 
-                    :headers="headers" 
-                    :search="search"
-                    :items-per-page="11"
-                    hide-default-footer
-                    >
-                    
-                    <template v-slot:item.late="{ item }">
-                         <v-chip :color="getColor(item.late)" >{{ item.late }}</v-chip>
-                    </template>
-                    <template v-slot:item.name="{ item }">
-                        <strong >{{ item.name }}</strong>
-                    </template>
-                    </v-data-table>
-                </v-card>
-            
-            </v-flex>
+      
         </v-layout>
     </v-container>
 </template>
 
 
 <script>
+import axios from 'axios'
+
   export default {
     props:['dessertss'],
     data () {
       return {
+        dates: ["" ,""],
+        menu:false,
         search: '',
-        headers: [{ text:'이름',align:'center',sortable: false,value: 'name',width:'100',},
-                  { text:'출석(총)',value:'attendance',width:'95'},
-                  { text:'지각',value:'late',width:'74'},
-                  { text:'결석',value:'absend',width:'74'},
-                  { text:'입실시간',value:'start',width:'93'},
-                  { text:'퇴실시간',value:'end', width:'93'}],
+        headers: [{ text:'이름',align:'center',sortable: false,value: 'name',width:'100',align:'center',},
+                  { text:'출석(총)',value:'attendance',width:'95',align:'center',},
+                  { text:'출석률',value:'attendanceRate',width:'95',align:'center',},
+                  { text:'지각',value:'late',width:'74',align:'center',},
+                  { text:'지각률',value:'lateRate',width:'90',align:'center',},
+                  { text:'결석',value:'absence',width:'74',align:'center',},
+                  { text:'결석률',value:'absenceRate',width:'90',align:'center',},
+                  { text:'조퇴',value:'early',width:'74',align:'center',},
+                  { text:'조퇴률',value:'earlyRate',width:'90',align:'center',},],
+                 // { text:'입실시간',value:'in_time',width:'93'},
+                 // { text:'퇴실시간',value:'out_time', width:'93'}],
+        dessertesx:'',
+        
+        today:this.$moment(new Date()).format('YYYY-MM-DD'),
+        oneprevmonth:this.$moment(new Date()).add(-30,'days').format('YYYY-MM-DD'),
+        twoprevmonth:this.$moment(new Date()).add(-60,'days').format('YYYY-MM-DD'),
+        threeprevmonth:this.$moment(new Date()).add(-90,'days').format('YYYY-MM-DD'),
 
-        desserts: [{name: '김광일',attendance: 140+"/"+150,late: 1,early:1,absend:24,start: 14+":"+15,end:20+":"+15},
-                   {name: '김민혁',attendance: 140+"/"+150,late: 2,early:1,absend: 37,start: 8+":"+15,end:22+":"+15},
-                   {name: '김범수',attendance: 140+"/"+150,late: 3,early:1,absend: 23,start: 7+":"+15,end:19+":"+35},
-                   {name: '김성훈',attendance: 140+"/"+150,late: 3,early:1,absend: 67,start: 12+":"+15,end:23+":"+18},
-                   {name: '정민교',attendance: 140+"/"+150,late: 6,early:1,absend: 24,start: 8+":"+15,end:22+":"+58},
-                   {name: '김원형',attendance: 140+"/"+150,late: 9,early:1,absend: 37,start: 8+":"+15,end:22+":"+58},
-                   {name: '김재경',attendance: 140+"/"+150,late: 25,early:1,absend: 23,start: 8+":"+15,end:22+":"+58},
-                   {name: '김정원',attendance: 140+"/"+150,late: 8,early:1,absend: 24,start: 8+":"+15,end:22+":"+58},
-                   {name: '김지민',attendance: 140+"/"+150,late: 9,early:1,absend: 37,start: 8+":"+15,end:22+":"+58},
-                   {name: '권소현',attendance: 140+"/"+150,late: 3,early:1,absend: 23},
-                   {name: '김창한',attendance: 140+"/"+150,late: 2,early:1,absend: 24},
-                   {name: '김한얼',attendance: 140+"/"+150,late: 9,early:1,absend: 37},
-                   {name: '이승형',attendance: 140+"/"+150,late: 16,early:1,absend: 23},
-                   {name: '김희수',attendance: 140+"/"+150,late: 16,early:1,absend: 23},
-                   {name: '이재원',attendance: 140+"/"+150,late: 9,early:1,absend: 37},],
-
-        dessertsx: [{name: '문성진',attendance: 140+"/"+150,late: 6,early:1,absend: 24,start: 14+":"+15,end:20+":"+15},
-                   {name: '박시연',attendance: 140+"/"+150,late: 9,early:1,absend: 37,start: 14+":"+15,end:20+":"+15},
-                   {name: '박유라',attendance: 140+"/"+150,late: 16,early:1,absend: 23,start: 14+":"+15,end:20+":"+15},
-                   {name: '박중규',attendance: 140+"/"+150,late: 3,early:1,absend: 67,start: 14+":"+15,end:20+":"+15},
-                   {name: '백범환',attendance: 140+"/"+150,late: 6,early:1,absend: 24,start: 14+":"+15,end:20+":"+15},
-                   {name: '변희주',attendance: 140+"/"+150,late: 9,early:1,absend: 37,start: 14+":"+15,end:20+":"+15},
-                   {name: '성기현',attendance: 140+"/"+150,late: 20,early:1,absend: 23},
-                   {name: '손형탁',attendance: 140+"/"+150,late: 6,early:1,absend: 24},
-                   {name: '신동협',attendance: 140+"/"+150,late: 9,early:1,absend: 37},
-                   {name: '신천은',attendance: 140+"/"+150,late: 16,early:1,absend: 23,start: 14+":"+15,end:20+":"+15},
-                   {name: '위동현',attendance: 140+"/"+150,late: 6,early:1,absend: 24,start: 14+":"+15,end:20+":"+15},
-                   {name: '유시온',attendance: 140+"/"+150,late: 3,early:1,absend: 67,start: 14+":"+15,end:20+":"+15},
-                   {name: '이구슬',attendance: 140+"/"+150,late: 6,early:1,absend: 24,start: 14+":"+15,end:20+":"+15},
-                   {name: '이유택',attendance: 140+"/"+150,late: 9,early:1,absend: 37},
-                   {name: '이인준',attendance: 140+"/"+150,late: 16,early:1,absend: 23,start: 14+":"+15,end:20+":"+15},
-                   {name: '이주용',attendance: 140+"/"+150,late: 6,early:1,absend: 24,start: 14+":"+15,end:20+":"+15},],
-
-        dessertsy: [{name: '장주영',attendance: 140+"/"+150,late: 1,early:1,absend:24,start: 14+":"+15,end:20+":"+15},
-                   {name: '정경숙',attendance: 140+"/"+150,late: 2,early:1,absend: 37,start: 8+":"+15,end:22+":"+15},
-                   {name: '정연성',attendance: 140+"/"+150,late: 3,early:1,absend: 23,start: 7+":"+15,end:19+":"+35},
-                   {name: '정에준',attendance: 140+"/"+150,late: 3,early:1,absend: 67,start: 12+":"+15,end:23+":"+18},
-                   {name: '정재순',attendance: 140+"/"+150,late: 6,early:1,absend: 24,start: 8+":"+15,end:22+":"+58},
-                   {name: '조미향',attendance: 140+"/"+150,late: 9,early:1,absend: 37,start: 8+":"+15,end:22+":"+58},
-                   {name: '조승현',attendance: 140+"/"+150,late: 25,early:1,absend: 23,start: 8+":"+15,end:22+":"+58},
-                   {name: '조원찬',attendance: 140+"/"+150,late: 8,early:1,absend: 24,start: 8+":"+15,end:22+":"+58},
-                   {name: '허효선',attendance: 140+"/"+150,late: 9,early:1,absend: 37,start: 8+":"+15,end:22+":"+58},
-                   {name: '황용주',attendance: 140+"/"+150,late: 3,early:1,absend: 23},
-                   {name: '황원조',attendance: 140+"/"+150,late: 2,early:1,absend: 24},]
-
-     }
-      
+      }   
     },   
    methods: {
       getColor (late) {
@@ -163,7 +136,48 @@
        
         else return 'white'
       },
+      update(dates){
+        axios
+                .post('http://ec2-13-209-70-126.ap-northeast-2.compute.amazonaws.com/web/professor/professor_statistic.php',dates)
+                .then(res => {
+                   console.log(res.data)
+                    this.dessertesx=res.data
+              
+                })
+      },
+      onemonth(){
+          axios
+                .post('http://ec2-13-209-70-126.ap-northeast-2.compute.amazonaws.com/web/professor/professor_statistic.php',[this.today,this.oneprevmonth])
+                .then(res => {
+                   console.log(res.data)
+                    this.dessertesx=res.data
+                })
+      },
+       twomonth(){
+              axios
+                .post('http://ec2-13-209-70-126.ap-northeast-2.compute.amazonaws.com/web/professor/professor_statistic.php',[this.today,this.twoprevmonth])
+                .then(res => {
+                   console.log(res.data)
+                    this.dessertesx=res.data
+                })
+      },
+       threemonth(){
+              axios
+                .post('http://ec2-13-209-70-126.ap-northeast-2.compute.amazonaws.com/web/professor/professor_statistic.php',[this.today,this.threeprevmonth])
+                .then(res => {
+                   console.log(res.data)
+                    this.dessertesx=res.data
+                })
+      },
+       fourmonth(){
+        
+      }
     },
+    computed: {
+            dateRangeText () {
+                return this.dates.join(' ~ ')
+             },
+    }
   }
 
 </script>

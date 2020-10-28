@@ -25,7 +25,7 @@ export default {
 <style>
     .foot{
         
-        bottom: 0;
+        bottom:0px;
         width: 100%;
         text-align: center;
     

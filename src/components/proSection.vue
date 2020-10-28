@@ -1,13 +1,9 @@
 <template>
-    <v-container fluid="fluid" style=" padding:0px;">
-        <v-layout class="layout-container" >
-            
-            <v-flex md1="md1" style="text-align:center; height:877px">
-                <v-card 
-              
-               
-                style="height:877px;">
+    <v-container fluid="fluid" style="padding:0px;">
+        <v-layout class="layout-container">
 
+            <v-flex v-if="hover==true"  md1="md1" style="text-align:center; height:1000px">
+                <v-card style="height:1000px;">
                     <v-btn
                         class="btn_color"
                         outlined="outlined"
@@ -22,43 +18,58 @@
                         large="large"
                         text="text"
                         @click="statistic()"
-                        >출석 통계</v-btn>
-                        
+                        >출석 통계
+                        </v-btn>
+                           <v-btn
+                        class="btn_color"
+                        outlined="outlined"
+                        color="black"
+                        large="large"
+                        text="text"
+                        @click="page3"
+                        >시간 통계
+                        </v-btn>
                 </v-card>
             </v-flex>
-          
+
             <v-flex>
-                <v-simple-table dense fixed-header :height="height" v-if="isStatusOn" >
-                    <template v-slot:default>
-                    <thead>
+                <v-simple-table 
+                 
+                 dense fixed-header :height="height" v-if="isStatusOn"  >
+                    <template v-slot:default >
+                    <thead >
                         <tr>
-                            <th 
-                                v-for="days in dayss"
-                                :key="days"
-                                class="table_thead_td"
+                            <th style="padding:0;margin:0; text-align:center">
+                                <strong>이름</strong>
+                            </th>
+                                <th 
+                                v-for="(days,indexss) in datalist.days.length"
+                                :key="indexss"
                                 style="padding:0;margin:0; text-align:center">
                                 <v-btn
                                     text="text"
-                                    x-small="x-small"
+                                    x-small
                                     class="btn_f"
-                                    
-                                    color="red"
                                     width="25px"
-                                    style="height:30px;padding:0;">{{days}}</v-btn>
+                                    style="height:30px;padding:0;">
+                                    <v-chip style="margin:0px;" small label
+                                     :color="daycolor(datalist.days[indexss])">{{days}}</v-chip></v-btn>
                             </th>
                         </tr>
                     </thead>
-
+                   
                     <tbody >
                         <tr  v-for="(student_names,indexs) in datalist.categories.category" :key="indexs" >
-                            <td class="table_thead_td" style="padding:5px;">
-                            <strong >{{student_names}}</strong>
+                            <td 
+                            :v-model="student_names"
+                            class="table_thead_td" style="padding:5px;" 
+                            @click="TimeSet(student_names)"
+                            >
+                              <strong>{{student_names}}</strong>
                             </td>
-                          
-                                          
                             <td  v-for="(sta,index) in std_check_day" :key="index" class="table_thead_td"
                                 style="padding:0px;margin:0px;" >
-                                <v-chip small
+                                <v-chip else small
                                     :color="checkback(datalist.dataset[indexs].data[index])" 
                                     :text-color="checktext(datalist.dataset[indexs].data[index])" 
                                     style="width:15px">
@@ -73,58 +84,73 @@
                             </td>
                         </tr>
                     </tbody>
+                    
                     </template>
                 </v-simple-table>
-                <h3></h3>
+
                 <Date v-if="isStatus2"
                 :dessertss="dessertss"
                 ></Date>
-               
+
+                <Timeview v-if="isStatus3">
+                </Timeview>
+        
             </v-flex>
         </v-layout>
     </v-container>
 </template>
 <script>
+import Manager from './Manager.vue'
 import Char from './Char.vue'
 import proheadercom from './proHeader.vue'
 import {mapState} from "vuex"
 import axios from 'axios'
 import Date from './Date.vue'
+import Timeview from './Timeview.vue'
+
 
 
     export default {
         
         components: {
-            proheadercom,Char,Date
+            proheadercom,Char,Date,Manager,Timeview
           
         },
-        props:['datalist','std_check_day','dataSource','student_checknull','currentYear','currentMonth','dayss'],
+        props:['hover','datalist','std_check_day','dataSource','student_checknull','currentYear','currentMonth'],
         data(){
             return {
-                height: 852,
+                
+                dates: ["" ,"" ],
+                menu:false,
+                height: 980,
                 info:[],
                 isStatusOn:true,
                 isStatus2:false,
+                isStatus3:false,
                 dessertss:'',
-                 
+    
+           
+
+              
             }
         },
         mutations(){
             this.info.currentYear=this.currentYear
-            this.info.currentMonth=this.currentMonth   
+            this.info.currentMonth=this.currentMonth  
+             
            
         },
         mounted(){
-            this.say()
+             
         },
      
         methods: {
-        
             statistic(){
                 this.isStatus2 = true;
                 this.isStatusOn = false;
+                this.isStatus3 = false;
                 axios
-                .post('http://192.168.0.6/web/professor/professor_statistic.php')
+                .post('http://ec2-13-209-70-126.ap-northeast-2.compute.amazonaws.com/web/professor/professor_statistic.php')
                 .then(res => {
                    console.log(res.data)
                     this.dessertss=res.data
@@ -133,11 +159,14 @@ import Date from './Date.vue'
             toggleOnOff: function() {
                  this.isStatusOn = true;
                  this.isStatus2 = false;
+                 this.isStatus3 = false;
             },
-           // page2: function() {
-           //     this.isStatus2 = true;
-           //     this.isStatusOn = false;
-           // },
+            
+            page3: function() {
+                this.isStatus2 = false;
+                this.isStatusOn = false;
+                this.isStatus3 = true;
+            },
            checkback(late){
                if (late == 2) return '#FF5252'
                else if (late == 1) return '#FFB74D'
@@ -150,13 +179,56 @@ import Date from './Date.vue'
                 else if (late == 1) return '#FFB74D'
                 else if (late == 0 ) return 'green'
                 else return 'transparent'
-            }
-        }, say(){
+            },
+            daycolor(redday){
+                if(redday==1) return 'red'
+                else if(redday==2) return 'green'
+                else return 'white'
+            },
+        classObject(){
                 
+        },    
+        StudentAdd(){
+            this.add=true
+            this.change=false
+            this.Sdelete=false
+
+        },
+        StudentChange(){
+            this.add=false
+            this.change=true
+            this.Sdelete=false
+        },
+        StudentDelete(){
+            this.add=false
+            this.change=false
+            this.Sdelete=true
+        },
+        change(changeObj){
+            menu2=true
+             axios
+                .post('http://ec2-13-209-70-126.ap-northeast-2.compute.amazonaws.com/web/professor/professor_main.php',changeObj)
+                .then(res => {
+                   console.log(res.data)
+                    this.dessertss=res.data
+                })
+            }
+            ,change2(){
+                
+                this.menu2=false
+                console.log("안녕")
+            },
+            TimeSet(stdname){
+                console.log(stdname)
+                
+            }
         },
         computed: {
             ...mapState(["userInfo"]),
-        
+           
+                dateRangeText () {
+                return this.dates.join(' ~ ')
+             },
         }
     }
 </script>
@@ -174,13 +246,12 @@ import Date from './Date.vue'
         
     }
     .table_thead_td {
-        
         text-align: center;
     }
     .v-data-table table {
         border-spacing: 1px;
     }
-
+     
 </style>
 
 <style module>
@@ -188,4 +259,3 @@ import Date from './Date.vue'
      border: solid 1px red;
 }
 </style>
-

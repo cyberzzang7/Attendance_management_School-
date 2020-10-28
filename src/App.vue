@@ -1,3 +1,4 @@
+|
 <template>
   <v-app id="inspire">
     <v-app-bar dense color="dark" dark v-if="$route.name!=='professorpage'&&$route.name!=='mypage'">

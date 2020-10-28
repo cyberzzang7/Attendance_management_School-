@@ -26,7 +26,7 @@
                                     depressed="depressed"
                                     large="large"
                                     block="block"
-                                    @click="login({email:email,password:password})">
+                                    @click="login({email:email,password:password,year,month})">
                                     로그인
                                     <!--로그인한당-->
                                 </v-btn>
@@ -46,7 +46,13 @@
     import axios from 'axios'
     export default {
         data() {
-            return {email: null, password: null}
+        
+            return {email: null,
+                    password: null,
+                    year: new Date().getFullYear(), 
+                    month: new Date().getMonth()+1,
+                
+                }    
         },
         computed: {
             ...mapState(["isLogin", "isLoginError"])

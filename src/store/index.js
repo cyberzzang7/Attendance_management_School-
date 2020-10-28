@@ -34,29 +34,31 @@ export default new Vuex.Store({
     }, // state값을  로직을 변화 시킴
     actions: {
         //로그인 시도 성공했을 때 뮤테이션 성공을 실행
-
+        // 로그이 -> 토큰 반환
         login({ commit }, loginObj) {
             axios
-                .post('http://192.168.0.6/web/login_check_web.php', loginObj)
+                .post('http://ec2-13-209-70-126.ap-northeast-2.compute.amazonaws.com/web/login_check_web.php', loginObj)
                                                             //loginObj = {email,password}
             .then (res => {
             //서버에서 돌아오는 결과값
             let a = res.data
             console.log(a)
             if (res.data.std === true ){
+                // 토큰 -> 멤버 정보를 반환
+                // 새로 고침 -> 토큰만 가지고 멤버정보를 요청.
                 axios
-                .post('http://192.168.0.6/web/student/student_main.php', a)
+                .post('http://ec2-13-209-70-126.ap-northeast-2.compute.amazonaws.com/web/student/student_main.php', a)
                 .then (res => {
                     let b = res.data
                     console.log(b)
                     let userInfo = { 
-                     std_name : res.data.basic_user_inf["0"].std_name,
-                     std_num : res.data.basic_user_inf["0"].std_num,
-                   in_time : res.data.today_in_out["0"].in_time,
-                   out_time : res.data.today_in_out["0"].out_time,
-                     attend : res.data.statistic_left["0"].attend,
-                     absence : res.data.statistic_left["0"].absence,
-                     late : res.data.statistic_left["0"].late,
+                    std_name : res.data.basic_user_inf["0"].std_name,
+                    std_num : res.data.basic_user_inf["0"].std_num,
+                   // in_time : res.data.today_in_out["0"].in_time,
+                   // out_time : res.data.today_in_out["0"].out_time,
+                    attend : res.data.statistic_left["0"].attend,
+                    absence : res.data.statistic_left["0"].absence,
+                    late : res.data.statistic_left["0"].late,
                     early_leave : res.data.statistic_left["0"].early_leave,
                     }
                     let setInfo = res.data.basic_user_inf["0"].std_num
@@ -68,9 +70,9 @@ export default new Vuex.Store({
                   
                 })
             }else if (res.data.pfr === true){
-                axios.post('http://192.168.0.6/web/professor/professor_main.php',loginObj)
+                axios.post('http://ec2-13-209-70-126.ap-northeast-2.compute.amazonaws.com/web/professor/professor_main.php',loginObj)
                 .then (res=>{
-                    console.log(res)
+                    
                     commit('loginSuccess')
                     router.push({name : "professorpage"})
                 })
@@ -114,7 +116,7 @@ export default new Vuex.Store({
                 console.log(3)
             }else{
             axios
-            .post('http://192.168.0.6/web/student/student_main_modify.php',changeObj)
+            .post('http://ec2-13-209-70-126.ap-northeast-2.compute.amazonaws.com/student/student_main_modify.php',changeObj)
             .then(res => {
                 console.log(res)
                 if(res.data["0"]==false){
