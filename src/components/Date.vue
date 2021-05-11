@@ -74,9 +74,6 @@
               style="margin-left: 5px"
               ><strong>3개월</strong></v-btn
             >
-            <v-btn x-large="" color="#00E676" dark style="margin-left: 5px"
-              ><strong>1년</strong></v-btn
-            >
           </v-card-title>
           <v-data-table
             height="900"

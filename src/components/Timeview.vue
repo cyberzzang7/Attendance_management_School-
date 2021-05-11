@@ -52,6 +52,8 @@ export default {
       currentY: new Date().getFullYear(),
       currentM: new Date().getMonth() + 1,
       currentD: new Date().getDate(),
+      dayInf: 0,
+      times: [],
       headers: [
         {
           text: " 이름",
@@ -77,15 +79,26 @@ export default {
     };
   },
   created() {
+    this.currentnow.setDate(this.currentnow.getDate());
+    console.log(this.currentnow.getMonth() + 1);
+    console.log(this.currentnow.getDate());
+    this.currentY = this.currentnow.getFullYear();
+    this.currentM = this.currentnow.getMonth() + 1;
+    this.currentD = this.currentnow.getDate();
+    const currentDD = this.currentD;
+    const date = this.currentY + "-" + this.currentM + "-" + currentDD;
+    console.log(date);
     axios
-      .post(
-        "http://ec2-13-209-70-126.ap-northeast-2.compute.amazonaws.com/web/professor/studentTime.php"
-      )
+      .post("http://13.209.70.126/web/professor/date_time.php", {
+        date: date,
+      })
       .then((res) => {
         console.log(res.data);
         this.intime = res.data.desserts[0].in_time;
         this.outtime = res.data.desserts[0].out_time;
         this.arr = res.data.desserts;
+        this.dayInf = res.data.dayInf;
+        this.times = res.data.times;
         //    for(var i=0;i < 31;i++){
         //          this.arr2+=res.data.desserts[i].in_time+' , '
         //          this.arr3+=res.data.desserts[0].out_time+' , '
@@ -117,20 +130,36 @@ export default {
     getColor(in_time) {
       console.log(moment(in_time)._i);
       console.log(this.toHHMMSS(32400));
-      if (moment(in_time)._i > this.toHHMMSS(32400)) return "#F44336";
-      else return "white";
+      if (this.dayInf != 0 && this.dayInf != 6) {
+        if (moment(in_time)._i > this.times[0]) return "#F44336";
+        else return "white";
+      } else {
+        return "white";
+      }
     },
     getColor2(out_time) {
-      if (moment(out_time)._i < this.toHHMMSS(75600)) return "#F44336";
-      else return "white";
+      if (this.dayInf != 0 && this.dayInf != 6) {
+        if (moment(out_time)._i < this.times[1]) return "#F44336";
+        else return "white";
+      } else {
+        return "white";
+      }
     },
     getTextColor(in_time) {
-      if (moment(in_time)._i > this.toHHMMSS(32400)) return "white";
-      else return "black";
+      if (this.dayInf != 0 && this.dayInf != 6) {
+        if (moment(in_time)._i > this.times[0]) return "white";
+        else return "black";
+      } else {
+        return "black";
+      }
     },
     getTextColor2(out_time) {
-      if (moment(out_time)._i < this.toHHMMSS(75600)) return "white";
-      else return "black";
+      if (this.dayInf != 0 && this.dayInf != 6) {
+        if (moment(out_time)._i < this.times[1]) return "white";
+        else return "black";
+      } else {
+        return "black";
+      }
     },
     onClickPrev: function (currentY, currentM, currentD) {
       this.currentnow.setDate(this.currentnow.getDate() - 1);
@@ -151,6 +180,8 @@ export default {
           this.intime = res.data.desserts[0].in_time;
           this.outtime = res.data.desserts[0].out_time;
           this.arr = res.data.desserts;
+          this.dayInf = res.data.dayInf;
+          this.times = res.data.times;
           //    for(var i=0;i < 31;i++){
           //          this.arr2+=res.data.desserts[i].in_time+' , '
           //          this.arr3+=res.data.desserts[0].out_time+' , '
@@ -176,6 +207,8 @@ export default {
           this.intime = res.data.desserts[0].in_time;
           this.outtime = res.data.desserts[0].out_time;
           this.arr = res.data.desserts;
+          this.dayInf = res.data.dayInf;
+          this.times = res.data.times;
           //    for(var i=0;i < 31;i++){
           //          this.arr2+=res.data.desserts[i].in_time+' , '
           //          this.arr3+=res.data.desserts[0].out_time+' , '

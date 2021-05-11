@@ -42,7 +42,7 @@
           <v-tab @click="toggleOnOff"><strong> 월별 출석부 </strong></v-tab>
           <v-tab @click="statistic()"><strong> 출석 통계 </strong></v-tab>
           <v-tab @click="page3"><strong> 시간 통계 </strong></v-tab>
-          <v-tab><strong> (진행중) </strong></v-tab>
+          <v-tab @click="page4"><strong> 교실현 현황 </strong></v-tab>
         </v-tabs>
         <hr />
         <v-simple-table height="800px" dense fixed-header v-if="isStatusOn">
@@ -74,6 +74,19 @@
                   >
                 </th>
               </tr>
+
+              <tr>
+                <th style="padding: 0; margin: 0; text-align: center">
+                  <strong>당일출석</strong>
+                </th>
+                <th
+                  v-for="(value, indexsss) in count"
+                  :key="indexsss"
+                  style="padding: 0; margin: 0; text-align: center"
+                >
+                  <h3 v-if="value !== 0">{{ value }}%</h3>
+                </th>
+              </tr>
             </thead>
 
             <tbody>
@@ -85,7 +98,6 @@
                   :v-model="student_names"
                   class="table_thead_td"
                   style="padding: 5px"
-                  @click="TimeSet(student_names)"
                 >
                   <strong>{{ student_names }}</strong>
                 </td>
@@ -95,12 +107,6 @@
                   :key="index"
                   class="table_thead_td"
                   style="padding: 0px; margin: 0px"
-                  @click="
-                    TimeSet(
-                      datalist.dataset[indexs].start_time[index],
-                      datalist.dataset[indexs].end_time[index]
-                    )
-                  "
                 >
                   <v-hover>
                     <template v-slot:default="{ hover }">
@@ -156,8 +162,8 @@
         </v-simple-table>
 
         <Date v-if="isStatus2" :dessertss="dessertss"></Date>
-
         <Timeview v-if="isStatus3"> </Timeview>
+        <Classroom v-if="isStatus4"> </Classroom>
       </v-flex>
     </v-layout>
   </v-container>
@@ -170,12 +176,13 @@ import { mapState } from "vuex";
 import axios from "axios";
 import Date from "./Date.vue";
 import Timeview from "./Timeview.vue";
-
+import Classroom from "./Classroom.vue";
 export default {
   components: {
     proheadercom,
     Char,
     Date,
+    Classroom,
     Manager,
     Timeview,
   },
@@ -187,6 +194,7 @@ export default {
     "student_checknull",
     "currentYear",
     "currentMonth",
+    "count",
   ],
   data() {
     return {
@@ -197,6 +205,7 @@ export default {
       isStatusOn: true,
       isStatus2: false,
       isStatus3: false,
+      isStatus4: false,
       dessertss: "",
       hoverTarget: "none",
       overlay: false,
@@ -221,25 +230,36 @@ export default {
       this.isStatus2 = true;
       this.isStatusOn = false;
       this.isStatus3 = false;
+      this.isStatus4 = false;
       axios
         .post(
           "http://ec2-13-209-70-126.ap-northeast-2.compute.amazonaws.com/web/professor/professor_statistic.php"
         )
         .then((res) => {
-          console.log(res.data);
+          console.log(res.data.days);
           this.dessertss = res.data;
+
+          for (var i = 0; i < res.data.days.length; i++) {}
         });
     },
     toggleOnOff: function () {
       this.isStatusOn = true;
       this.isStatus2 = false;
       this.isStatus3 = false;
+      this.isStatus4 = false;
     },
 
     page3: function () {
       this.isStatus2 = false;
       this.isStatusOn = false;
       this.isStatus3 = true;
+      this.isStatus4 = false;
+    },
+    page4: function () {
+      this.isStatus2 = false;
+      this.isStatusOn = false;
+      this.isStatus3 = false;
+      this.isStatus4 = true;
     },
     checkback(late) {
       if (late == 2) return "#FF5252";
@@ -282,14 +302,12 @@ export default {
           changeObj
         )
         .then((res) => {
-          console.log(res.data);
-          this.dessertss = res.data;
+          console.log(res);
+          this.menu2 = false;
+          console.log("안녕");
         });
     },
-    change2() {
-      this.menu2 = false;
-      console.log("안녕");
-    },
+
     TimeSet(startTime, endTime) {
       alert(startTime, endTime);
     },

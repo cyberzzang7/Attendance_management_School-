@@ -10,7 +10,7 @@
 
         <v-flex md1="md1">
           <div style="text-align: center; padding-top: 7px">
-            <h3>오늘의출석률{{ Average }}%</h3>
+            <h3>당일 지각률 {{ Average }}%</h3>
             <h3>{{ Attendance }} / {{ datalist.dataset.length }}명 중</h3>
           </div>
         </v-flex>
@@ -256,6 +256,7 @@
       :dataSource="dataSource"
       :std_check_day="std_check_day"
       :datalist="datalist"
+      :count="count"
       :hover="hover"
     ></proSectionCom>
   </v-container>
@@ -308,6 +309,7 @@ export default {
       currentYear: new Date().getFullYear(),
       currentMonth: new Date().getMonth() + 1,
       datalist: "",
+      count: [],
       student_checknull: [],
       std_check_day: [],
       dataSource,
@@ -323,6 +325,7 @@ export default {
       leaving: 0,
       year: new Date().getFullYear(),
       month: new Date().getMonth() + 1,
+      currentnow: new Date(),
       std_count: 0,
     };
   },
@@ -368,21 +371,41 @@ export default {
         )
         .then((res) => {
           this.datalist = res.data;
-          console.log(res.data);
-          console.log("이 php 호출");
+          let testdate = new Date(this.year, this.month, 0).getDate();
+          console.log(testdate);
+          let countarr = [];
+          for (var i = 0; i < testdate; i++) {
+            countarr.push(0);
+          }
+
+          let number = 0;
+          let countarray = [];
           for (
             var stdCount = 0;
             stdCount < this.datalist.categories.category.length;
             stdCount++
           ) {
             if (
-              this.datalist.dataset[stdCount].data[new Date().getDate() - 1] ==
+              this.datalist.dataset[stdCount].data[new Date().getDate() - 1] !=
               0
             ) {
               this.Attendance += 1;
             }
+            for (var i = 0; i < res.data.dataset[stdCount].data.length; i++) {
+              if (this.datalist.dataset[stdCount].data[i] == 0) {
+                number += 1;
+                countarr[i]++;
+              }
+            }
+            number = 0;
           }
-          console.log(this.Attendance);
+          for (var k = 0; k < countarr.length; k++) {
+            countarray[k] = Math.floor(
+              (countarr[k] / this.datalist.categories.category.length) * 100
+            );
+          }
+          this.count = countarray;
+          console.log(countarr[1]);
           this.Average = Math.floor(
             (this.Attendance / this.datalist.categories.category.length) * 100
           );
@@ -413,7 +436,8 @@ export default {
       } else {
         this.currentMonth -= 1;
       }
-
+      let testdate = new Date(year, month, 0).getDate();
+      console.log(testdate);
       axios
         .post(
           "http://ec2-13-209-70-126.ap-northeast-2.compute.amazonaws.com/web/professor/professor_main.php",
@@ -422,6 +446,37 @@ export default {
         .then((res) => {
           (this.datalist = ""), (this.datalist = res.data);
           console.log(res);
+          let countarr = [];
+          for (var i = 0; i < testdate; i++) {
+            countarr.push(0);
+          }
+          let number = 0;
+          let countarray = [];
+          for (
+            var stdCount = 0;
+            stdCount < this.datalist.categories.category.length;
+            stdCount++
+          ) {
+            if (
+              this.datalist.dataset[stdCount].data[new Date().getDate() - 1] !=
+              0
+            ) {
+            }
+            for (var i = 0; i < res.data.dataset[stdCount].data.length; i++) {
+              if (this.datalist.dataset[stdCount].data[i] == 0) {
+                number += 1;
+                countarr[i]++;
+              }
+            }
+            number = 0;
+          }
+          for (var k = 0; k < countarr.length; k++) {
+            countarray[k] = Math.floor(
+              (countarr[k] / this.datalist.categories.category.length) * 100
+            );
+          }
+          this.count = countarray;
+          console.log(countarr[1]);
           this.forr();
         });
     },
@@ -435,7 +490,8 @@ export default {
       } else {
         this.currentMonth += 1;
       }
-
+      let testdate = new Date(year, month, 0).getDate();
+      console.log(testdate);
       axios
         .post(
           "http://ec2-13-209-70-126.ap-northeast-2.compute.amazonaws.com/web/professor/professor_main.php",
@@ -444,6 +500,37 @@ export default {
         .then((res) => {
           (this.datalist = ""), (this.datalist = res.data);
           console.log(res.data);
+          let countarr = [];
+          for (var i = 0; i < testdate; i++) {
+            countarr.push(0);
+          }
+          let number = 0;
+          let countarray = [];
+          for (
+            var stdCount = 0;
+            stdCount < this.datalist.categories.category.length;
+            stdCount++
+          ) {
+            if (
+              this.datalist.dataset[stdCount].data[new Date().getDate() - 1] !=
+              0
+            ) {
+            }
+            for (var i = 0; i < res.data.dataset[stdCount].data.length; i++) {
+              if (this.datalist.dataset[stdCount].data[i] == 0) {
+                number += 1;
+                countarr[i]++;
+              }
+            }
+            number = 0;
+          }
+          for (var k = 0; k < countarr.length; k++) {
+            countarray[k] = Math.floor(
+              (countarr[k] / this.datalist.categories.category.length) * 100
+            );
+          }
+          this.count = countarray;
+          console.log(countarr[1]);
           this.forr();
         });
     },
